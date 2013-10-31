@@ -1,0 +1,35 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          webcam
+# Required-Start:    hostname $local_fs
+# Required-Stop:
+# Should-Start:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop webcam.
+# Description:       This script starts/stops webcam.
+### END INIT INFO
+
+res=0
+
+case "$1" in
+  start)
+	/usr/local/bin/mjpg_streamer -i "/usr/local/lib/input_uvc.so" -o "/usr/local/lib/output_http.so -w /usr/local/www" &
+	;;
+  restart|reload|force-reload)
+	killall webcam
+	/usr/local/bin/mjpg_streamer -i "/usr/local/lib/input_uvc.so" -o "/usr/local/lib/output_http.so -w /usr/local/www" &
+	;;
+  stop)
+	killall mjpg_streamer
+	;;
+  status)
+	;;
+  *)
+	echo "Usage: webcam [start|stop|status]" 
+	res=3
+	;;
+esac
+
+exit $res
+

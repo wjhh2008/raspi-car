@@ -1,0 +1,33 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          ArduinoServer
+# Required-Start:    hostname $local_fs
+# Required-Stop:
+# Should-Start:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop ArduinoServer.
+# Description:       This script starts/stops ArduinoServer.
+### END INIT INFO
+
+res=0
+
+case "$1" in
+  start)
+	/home/pi/code/pyctrl/arduinoserver.py &
+  	;;
+  restart|reload|force-reload)
+  	;;
+  stop)
+  	killall arduinoserver.py
+	;;
+  status)
+	;;
+  *)
+	echo "Usage: webcam [start|stop|status]" 
+	res=3
+	;;
+esac
+
+exit $res
+
