@@ -19,6 +19,9 @@ while True:
 	motor = int(cmd[0])
 	servo = int(cmd[1])
 	dev = open("/dev/ArduinoServer","w")
+	if servo==255:
+		os.system('poweroff')
+		break
 	if motor > 255:
 		motor = 255
 	if motor < -255:

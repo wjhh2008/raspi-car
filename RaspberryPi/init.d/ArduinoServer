@@ -14,7 +14,7 @@ res=0
 
 case "$1" in
   start)
-	/home/pi/code/pyctrl/arduinoserver.py &
+	/usr/local/bin/arduinoserver.py &
   	;;
   restart|reload|force-reload)
   	;;
