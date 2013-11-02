@@ -70,5 +70,6 @@ sudo cp ./RaspberryPi/www/* /var/www
 sudo service lighttpd restart
 ```
 5)Setting up a Raspberry Pi as a WiFi access point
+
 [Follow this page](http://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/overview)
 
