@@ -39,7 +39,7 @@ The shell commond to make it is as follows:
 `sudo cp ./RaspberryPi/pyctrl/carserver.py /usr/local/bin`
 `sudo vim /etc/rc.local`
 add this line before `exit 0` to start `carserver.py` script on boot:
-`python /usr/local/bin/pyctrl/carserver.py`
+`python /usr/local/bin/carserver.py`
 
 3)Install mjpg_streamer
 The project homepage is "http://sourceforge.net/projects/mjpg-streamer/"
