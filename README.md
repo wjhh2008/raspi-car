@@ -63,9 +63,9 @@ The code of homepage is written in HTML5.
 The control device must support *gravity sensing* .  The car is controlled by the sensing.
 The vedio in step 3) will appear on the homepage. 
 ```
-sudo apt-get install lighttpd
+sudo apt-get install lighttpd python-flup
 sudo lighttpd-enable-mod fastcgi
-sudo cp ./RaspberryPi/10-fastcgi.conf /etc/httpd/conf-enabled/
+sudo cp ./RaspberryPi/10-fastcgi.conf /etc/lighttpd/conf-enabled/
 sudo cp ./RaspberryPi/www/* /var/www
 sudo service lighttpd restart
 ```
