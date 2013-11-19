@@ -1,131 +1,52 @@
 <html>
-<head>
-<script type="text/javascript">
-var xmlhttp;
-if (window.XMLHttpRequest)
-{// code for IE7+, Firefox, Chrome, Opera, Safari
-	    xmlhttp=new XMLHttpRequest();
-}
-else
-{// code for IE6, IE5
-	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-}
-
-</script>
-
-<script type="text/javascript">
-
-/* Copyright (C) 2007 Richard Atterer, richard©atterer.net
-      This program is free software; you can redistribute it and/or modify it
-	     under the terms of the GNU General Public License, version 2. See the file
-		    COPYING for details. */
-
-var imageNr = 0; // Serial number of current image
-var finished = new Array(); // References to img objects which have finished downloading
-var paused = false;
-var ht = document.location.host;
-
-function createImageLayer() {
-	  var img = new Image();
-	  img.style.position = "absolute";
-	  img.style.zIndex = -1;
-	  img.onload = imageOnload;
-	  img.onclick = imageOnclick;
-	  img.src = "http://"+ht+":8080/?action=snapshot&n=" + (++imageNr);
-	  //img.src = "/?action=snapshot&n=" + (++imageNr);
-	  var webcam = document.getElementById("webcam");
-	  webcam.insertBefore(img, webcam.firstChild);
-}
-
-// Two layers are always present (except at the very beginning), to avoid flicker
-function imageOnload() {
-	  this.style.zIndex = imageNr; // Image finished, bring to front!
-	  while (1 < finished.length) {
-		   var del = finished.shift(); // Delete old image(s) from document
-		   del.parentNode.removeChild(del);
-	  }
-	  finished.push(this);
-	  if (!paused) createImageLayer();
-}
-
-function imageOnclick() { // Clicking on the image will pause the stream
-	  paused = !paused;
-	  if (!paused) createImageLayer();
-}
-
-</script>
-</head>
+	<head>
+		<script type="text/javascript">
+			var xmlhttp;
+			if (window.XMLHttpRequest)
+			{// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp=new XMLHttpRequest();
+			}
+			else
+			{// code for IE6, IE5
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		</script>
+		<script type="text/javascript" src="/js/mjpg_streamer.js"></script>
+	</head>
 <body onload="createImageLayer();">
-<div>
-<h1>RaspberryPi Car Control</h1>
-<table>
-<tr>
-<td>Direction</td>
-<td id="doEvent"></td>
-</tr>
-<tr>
-<td>Tilt Left/Right [gamma]</td>
-<td id="doTiltLR"></td>
-</tr>
-<tr>
-<td>Tilt Front/Back [beta]</td>
-<td id="doTiltFB"></td>
-</tr>
-<tr>
-<td>Direction [alpha]</td>
-<td id="doDirection"></td>
-</tr>
-</table>
-</div>
-<div id="webcam"><noscript><img src="http://"+ht+":8080/?action=snapshot" /></noscript></div>
-<script type="text/javascript">
-var count=0;
-var a=0;	//0-4000  0-2000:backward 2000-4000:forward
-var b=150;	//50-250
-var direction=0;
-var note=document.getElementById("doEvent");
-init();
-function init(){
-	if(window.DeviceOrientationEvent){
-		note.innerHTML="Let's Rock!";
-		window.addEventListener(
-				'deviceorientation',
-				function(eventData){
-					var tiltLR=eventData.gamma;
-					var tiltFB=eventData.beta;
-					var dir=eventData.alpha
-					deviceOrientationHandler(tiltLR,tiltFB,dir);
-					a=Math.round((90-tiltLR)*255/90); 
-					b=Math.round((-tiltFB)+90);
-					//sendcmd();
-					if (Math.round(tiltLR)<0){
-						note.innerHTML="Please Up Side Down!";
-						note.style.color="red";
-						direction = 0;
-					}else{
-						note.innerHTML="Let's Rock!";
-						note.style.color="black";
-						direction = 1;
-					}
-				},
-				false);
-	}
-	else{
-		document.getElementById("doEvent").innerHTML="Not supported on your device or browser.  Sorry."
-	}
-}
-function deviceOrientationHandler(tiltLR,tiltFB,dir){
-	document.getElementById("doTiltLR").innerHTML=Math.round(tiltLR);
-	document.getElementById("doTiltFB").innerHTML=Math.round(tiltFB);
-	document.getElementById("doDirection").innerHTML=Math.round(dir);
-}
-function sendcmd(){
-	if (direction==1){
-		xmlhttp.open("GET","/go.py?motor="+a+"&servo="+b,true);
-		xmlhttp.send();
-	}
-}
-setInterval(sendcmd,100)
-</script>
+	<div>
+		<div style="width:300px; float:left">
+			<div><h1 id="test" align="center">The Need For Speed </br> RaspberryPi </h1></div>
+			<div>
+				<canvas id="power1" width="40" height="180" style="border:2px solid #000000;">Your browser does not support the canvas element.</canvas>
+				<canvas id="steering" width="240" height="180" >Your browser does not support the canvas element.</canvas>
+			</div>
+			<script type="text/javascript" src="/js/draw_steering.js"></script>
+			<script type="text/javascript" src="/js/draw_power.js"></script>
+			<div><h1 id="doEvent" align="center"></h1></div>
+			<!--
+			<div>
+			<table>	
+				<tr>
+					<td>Tilt Left/Right [gamma]</td>
+					<td id="doTiltLR"></td>
+				</tr>
+				<tr>
+					<td>Tilt Front/Back [beta]</td>
+					<td id="doTiltFB"></td>
+				</tr>
+				<tr>
+					<td>Direction [alpha]</td>
+					<td id="doDirection"></td>
+				</tr>
+			</table>
+			</div>
+			-->
+		</div>
+		
+		<div id="webcam" style="width:100%;"><noscript><img src="http://"+ht+":8080/?action=snapshot" /></noscript></div>
+		<script type="text/javascript" src="/js/sendcmd.js"></script>
+	</div>
+
 </body>
 </html>
