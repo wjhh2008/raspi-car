@@ -18,12 +18,12 @@ function gogogo(eventData){
 	if (Math.round(tiltLR)<0){
 		if (direction!=0){
 			direction = 0;
-			note.innerHTML="Please Up Side Down!";
+			note.innerHTML="Up Side Down!";
 			note.style.color="red";
 		}
 	}else{
 		if (direction!=1){
-			note.innerHTML="Let's Rock!";
+			note.innerHTML="GOGOGO!";
 			note.style.color="black";
 			direction = 1;
 		}
