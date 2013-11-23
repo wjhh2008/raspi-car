@@ -14,6 +14,7 @@ Part 1 on Arduino
     Motor : 380  
     Servo : S0270
     Class : SUV  
+    ![mycar](/img/mycar.jpg)
 
 - #### Arduino mini  
     [Arduino mini pro 5v 16MHZ](http://arduino.cc/en/Main/ArduinoBoardMini)  
@@ -172,7 +173,8 @@ Part 3 Quick Summary
 ```
   
 ### 3.Breif Diagram
-    ![summary](/img/summary.jpeg)
+
+![summary](/img/summary.jpeg)
     
     
 
