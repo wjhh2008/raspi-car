@@ -3,7 +3,7 @@ import os
 import serial
 import struct
 DEVFILE = '/dev/ArduinoServer'
-port = "/dev/ttyACM0"
+port = "/dev/ttyAMA0"
 serl = serial.Serial(port,115200)
 try:
 	if os.path.exists(DEVFILE):
@@ -19,7 +19,9 @@ else:
 		while True:
 			s = os.read(fd,1)
 			if s == '\n':
-				c = line.split('=')		#c[0] must in [0,255] for motor   c[1] must in [0,180] for servo
+				c = line.split('=')		
+				#c[0] must in [0,255] for motor   c[1] must in [0,180] for servo
+				#ATTENTION NO ERROR DETECT!
 				cmd = int(int(c[0])<0)
 				motor = abs(int(c[0]))  
 				servo = int(c[1])

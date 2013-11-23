@@ -6,6 +6,7 @@ var note=document.getElementById("doEvent");
 var tiltLR,tiltFB,dir;
 var level=0,old_level=0,step=4;
 var pow=0,old_pow=0;
+var forward = 0;
 var change=0;
 init();
 function gogogo(eventData){
@@ -27,28 +28,23 @@ function gogogo(eventData){
 			note.style.color="black";
 			direction = 1;
 		}
+	
 		if (Math.abs(tiltFB)<40)
 			level = Math.round(-tiltFB/step);
-		if (Math.abs(90-tiltLR)<=60){
-			pow=Math.abs(90-tiltLR)*10/6;
-		}else pow = 100;
+		forward = 90-tiltLR;
+		if (Math.abs(forward)>60) forward = forward>0?60:-60;
+		pow=Math.abs(forward)*10/6;
 		//document.getElementById("test").innerHTML=level;
-		change=0;
+		//change=0;
 		if (level!=old_level){
 			rou(level*step);
 			old_level = level;
-			change=1;
 		}
-		if (pow!=old_pow){
-			draw_p(pow/10);
-			old_pow=pow;
-			change=1;
-		}
-		if (change){
-			a=(90-tiltLR)*255/90; 
-			b=-tiltFB+90;
-			//sendcmd();
-		}
+		draw_p(pow/10);
+		
+		a=Math.round(forward*255/60); 
+		b=-tiltFB+90;
+		//document.getElementById("test").innerHTML=""+a+b;
 	}
 }
 function init(){
@@ -67,11 +63,12 @@ function deviceOrientationHandler(tiltLR,tiltFB,dir){
 	document.getElementById("doDirection").innerHTML=dir;
 }
 */
+
 function sendcmd(){
 	if (direction==1){
 		xmlhttp.open("GET","/go.py?motor="+a+"&servo="+b,true);
 		xmlhttp.send();
 	}
 }
-//setInterval(sendcmd,100)
+setInterval(sendcmd,100)
 	

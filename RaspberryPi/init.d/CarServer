@@ -1,0 +1,32 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          CarServer
+# Required-Start:    hostname $local_fs
+# Required-Stop:
+# Should-Start:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop CarServer.
+# Description:       This script starts/stops CarServer.
+### END INIT INFO
+
+res=0
+
+case "$1" in
+  start)
+	/usr/local/bin/carserver.py &
+  	;;
+  restart|reload|force-reload)
+  	;;
+  stop)
+  	killall carserver.py
+	;;
+  status)
+	;;
+  *)
+	echo "Usage: webcam [start|stop|status]" 
+	res=3
+	;;
+esac
+
+exit $res

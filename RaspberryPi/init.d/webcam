@@ -14,11 +14,11 @@ res=0
 
 case "$1" in
   start)
-	/usr/local/bin/mjpg_streamer -i "/usr/local/lib/input_uvc.so" -o "/usr/local/lib/output_http.so -w /usr/local/www" &
+	/usr/local/bin/mjpg_streamer -b -o "/usr/local/lib/output_http.so -w /usr/local/www" -i "/usr/local/lib/input_raspicam.so -fps 15"
 	;;
   restart|reload|force-reload)
-	killall webcam
-	/usr/local/bin/mjpg_streamer -i "/usr/local/lib/input_uvc.so" -o "/usr/local/lib/output_http.so -w /usr/local/www" &
+	killall mjpg_streamer
+	/usr/local/bin/mjpg_streamer -b -o "/usr/local/lib/output_http.so -w /usr/local/www" -i "/usr/local/lib/input_raspicam.so -fps 15"
 	;;
   stop)
 	killall mjpg_streamer
