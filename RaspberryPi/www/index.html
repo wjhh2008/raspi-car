@@ -1,5 +1,10 @@
 <html>
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Raspi-Car</title>
+
+		<link rel="stylesheet" type="text/css" href="buttons/buttons.css" />
+
 		<script type="text/javascript">
 			var xmlhttp;
 			if (window.XMLHttpRequest)
@@ -23,7 +28,7 @@
 			</div>
 			<script type="text/javascript" src="/js/draw_steering.js"></script>
 			<script type="text/javascript" src="/js/draw_power.js"></script>
-			<div><h1 id="doEvent" align="center"></h1></div>
+			<div><h1 id="doEvent" align="center">READY</h1></div>
 			<!--
 			<div>
 			<table>	
@@ -42,9 +47,23 @@
 			</table>
 			</div>
 			-->
+			<div>
+				<a href="#" class="button big orange" onclick="start();" id="start">Start</a>
+				<a href="#" class="button big blue" onclick="poweroff();">Poweroff</a> 
+			</div>
+			<div style="width:150px;float:left" align="center">
+				<h1>SPEED</h1>	
+				<a href="#" class="button big green" onclick="cgspeed();" id="speed">1</a>
+			</div>
+			<div style="width:100%" align="center">
+				<h1>NOS</h1>
+				<a href="#" class="button big gray" onclick="nos();" id="speed">NOS</a>
+			</div>
+			
 		</div>
 		
-		<div id="webcam" style="width:100%;"><noscript><img src="http://"+ht+":8080/?action=snapshot" /></noscript></div>
+		
+		<div id="webcam" style="width:100%; height:100%"><noscript><img src="http://"+ht+":8080/?action=snapshot" /></noscript></div>
 		<script type="text/javascript" src="/js/sendcmd.js"></script>
 	</div>
 

@@ -19,14 +19,6 @@ def app(environ, start_response):
 		motor = int(i["motor"][0])
 	if "servo" in i:
 		servo = int(i["servo"][0])
-	if motor > 255:
-		motor = 255
-	if motor < -255:
-		motor = -255
-	if servo > 180:
-		servo = 180
-	if servo <0:
-		servo = 0
 #	yield 'calcok!'
 	dev.write(str(motor)+"="+str(servo)+"\n")
 

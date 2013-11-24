@@ -25,9 +25,11 @@ else:
 				cmd = int(int(c[0])<0)
 				motor = abs(int(c[0]))  
 				servo = int(c[1])
-				if servo==255:
+				if servo==255 and motor==255:
 					os.system('poweroff')
 					break
+				if servo==255:
+					cmd = 3
 				serl.write(struct.pack('BBB',cmd,motor,servo))
 				break
 			line += s

@@ -11,10 +11,13 @@
 #define LED_Mid 8
 #define LED_High 13
 #define waittime 2
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
-int shut_Low = 120, shut_High = 30;
 
-int motor,servo,cmd;
+#define mod_tout 2
+#define mod_sonar 4
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+int shut_Low = 120, shut_High = 30, sonar_status = 0;
+unsigned long timeout = 0, now = 0;
+int motor,servo,cmd,p1,p2;
 int mod = 0; 
 Servo myservo;
 int dtime;
@@ -30,9 +33,10 @@ void setup(){
   
   //init motor
   
+ // setPwmFrequency(morPin,128);
+  
   pinMode(morPin,OUTPUT);
   pinMode(morGnd,OUTPUT);
-  setPwmFrequency(morPin,1);
   analogWrite(morPin,0);
   digitalWrite(morGnd,0);
   
@@ -52,58 +56,54 @@ void loop(){
   if (dtime>=DELAYTIME){
     dtime = 0;
     unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
-    //Serial.print("Ping: ");
-    //Serial.print(uS / US_ROUNDTRIP_CM); // Convert ping time to distance in cm and print result (0 = outside set distance range)
-    //Serial.println("cm");
     unsigned int dis = uS / US_ROUNDTRIP_CM;
-    if (dis > shut_Low){
-      digitalWrite(LED_Low,0);
-      digitalWrite(LED_Mid,1);
-      digitalWrite(LED_High,1);
-    }else if (dis > shut_High){
-      digitalWrite(LED_Low,1);
-      digitalWrite(LED_Mid,0);
-      digitalWrite(LED_High,1);
-    }else {
-      digitalWrite(LED_Low,1);
-      digitalWrite(LED_Mid,1);
-      digitalWrite(LED_High,0);
-    }
+    if (dis > shut_Low)
+      sonar_status = 1;
+    else if (dis > shut_High)
+      sonar_status = 2;
+    else 
+      sonar_status = 3;
   }
 
   if (Serial.available() > 0){
     
+    
     //rev cmd
     cmd = Serial.read();
     delay(waittime);
-    //analogWrite(morPin,cmd);
+    p1 = Serial.read();
+    delay(waittime);
+    p2 = Serial.read();
+    delay(waittime);
     
     if (cmd == 0 || cmd == 1){  
-      //0 Forward 1 Backward 
-      motor = Serial.read();
-      delay(waittime);
-      servo = Serial.read();
-      delay(waittime);
-      
-      //set servo
-      servo = 180-servo;
-      myservo.write(servo);
-      
-      //set motor
-      if (cmd == 1) motor = 255-motor;
-      analogWrite(morPin,motor);
-      analogWrite(11,motor);
-      digitalWrite(morGnd,cmd);
+        //0 Forward 1 Backward 
+        servo = 180-p2;
+        myservo.write(servo);
+        if (cmd == 1) motor = 255-p1;
+        else motor = p1;
+        analogWrite(morPin,motor);
+        digitalWrite(morGnd,cmd);
     }else if (cmd == 2){ 
-      //set shutdown
-      shut_Low = Serial.read();
-      delay(waittime);
-      shut_High = Serial.read();
-      delay(waittime);
-    }else if (cmd == 4){
-      //shutdown!
+        //set sonar
+        shut_Low = Serial.read();
+        delay(waittime);
+        shut_High = Serial.read();
+        delay(waittime);
+    }else if (cmd == 3){
+        //change mod!
+        mod = p1;
     }
     
+    timeout = millis();
+  }
+  // Cmd timeout
+  now = millis();
+  if (((mod & mod_tout) && now-timeout>1000)||
+      ((mod & mod_sonar) &&  sonar_status>2)){
+      analogWrite(morPin,0);
+      digitalWrite(morGnd,0);
+      myservo.write(90);
   }
 }
 /**
