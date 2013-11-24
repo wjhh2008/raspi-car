@@ -12,7 +12,7 @@ Part 1 on Arduino
 ### 1.Device
 - #### My car  
     Motor : 380  
-    Servo : S0270
+    Servo : S0270  
     Class : SUV  
     ![mycar](/img/mycar.jpg)
 
@@ -26,7 +26,7 @@ Part 1 on Arduino
     ![Logic Level Converter](/img/logiclevelconverter.jpg)  
 
 - #### BTN7971B Module 
-    The motor driver chip with much better performence comparing with L298N.  
+    The motor driver chip with much better performence comparing to L298N.  
     ![BTN7971B](/img/BTN7971B.JPG)  
 
 - #### LM2596ADJ Module  
@@ -50,7 +50,7 @@ Part 1 on Arduino
 
 
 ### 2.Driver Code
-- #### Serial Server  
+- #### Serial Port Conmunication  
     Arduino Serial is repeatedly waiting for commond composed by the three bits of instruction. These three bits represent direction(0 or 1), motor speed(0-255) and steering angle(0-180).
 
 - #### Motor Driver  
@@ -62,8 +62,7 @@ Part 1 on Arduino
 
 - #### Sonar Sensor Driver  
     Used Pins : 2, 4
-    Use the arduino lib NEWPING.  
-    Get detail information from [here](http://playground.arduino.cc/Code/NewPing).  
+    Use the arduino lib [NEWPING](http://playground.arduino.cc/Code/NewPing).  
 
 - #### [__All Code for Arduino__](/Arduino/minictrl/minictrl.ino)  
 
