@@ -1,13 +1,13 @@
 var count=0;
 var a=0;	
 var b=0;	
-var direction=0;
+var direction=-1;
 var note=document.getElementById("doEvent");
 var tiltLR,tiltFB,dir;
 var level=0,old_level=0,step=4;
 var pow=0,old_pow=0;
 var spe=new Array(30,60,90);
-var lvspe=new Array("Here We GO","Rush","Unbelievable");
+var lvspe=new Array("Core i3","Core i5","Core i7");
 var lvsp = 0,old_lv;
 var forward = 0;
 var change=0;
@@ -27,7 +27,6 @@ init();
 //setTimeout("initmod();",1000);
 
 function gogogo(eventData){
-	if (st==0) return;
 	tiltLR=Math.round(eventData.gamma);
 	tiltFB=Math.round(eventData.beta);
 	dir=Math.round(eventData.alpha);
@@ -43,6 +42,11 @@ function gogogo(eventData){
 		a = 0;
 		b = 90;
 	}else{
+		if (st==0) {
+			note.innerHTML="Ready";
+			note.style.color="black";
+			return;
+		}
 		if (direction!=1){
 			note.innerHTML="GOGOGO!";
 			note.style.color="black";
@@ -92,8 +96,9 @@ function poweroff(){
 }
 function start(){
 	if (st==0){
-		a = 2; b = 255;
-		sendcmd();
+		a = 6; b = 255; 
+		sendcmd();	//init mod on Arduino
+		a = 0; b = 90;
 		id = setInterval(sendcmd,100);
 		stt.innerHTML="Stop";
 		st = 1;
@@ -110,8 +115,8 @@ function start(){
 	}
 }
 function cgspeed(){
-	lvsp = (lvsp+1) % 2;
-	spst.innerHTML = lvsp+1;
+	lvsp = (lvsp+1) % 3;
+	spst.innerHTML = lvspe[lvsp];
 }
 function nos(){
 	old_lv = lvsp;
@@ -120,6 +125,6 @@ function nos(){
 }
 function postnos(){
 	lvsp = old_lv;
-	spst.innerHTML = lvsp+1;
+	spst.innerHTML = lvspe[lvsp];
 	
 }

@@ -1,26 +1,29 @@
 #include <Servo.h>
 #include <NewPing.h>
 #define DELAYTIME 10000 
-#define TRIGGER_PIN  2  // Arduino pin tied to trigger pin on the ultrasonic sensor.
-#define ECHO_PIN     4  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define TRIGGER_PIN  4  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 400 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define morPin 11
 #define morGnd 12
 #define servoPin 9
+/*
 #define LED_Low 7
-#define LED_Mid 8
+#define LED_Mid 8  
 #define LED_High 13
+*/
 #define waittime 2
+#define ALARM_PIN 8
 
 #define mod_tout 2
 #define mod_sonar 4
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 int shut_Low = 120, shut_High = 30, sonar_status = 0;
-unsigned long timeout = 0, now = 0;
+unsigned long timeout = 0, now = 0,dtime;
 int motor,servo,cmd,p1,p2;
 int mod = 0; 
 Servo myservo;
-int dtime;
+
 
 void setup(){
   
@@ -39,30 +42,32 @@ void setup(){
   pinMode(morGnd,OUTPUT);
   analogWrite(morPin,0);
   digitalWrite(morGnd,0);
-  
+  /*
   pinMode(LED_Low,OUTPUT);
   pinMode(LED_Mid,OUTPUT);
   pinMode(LED_High,OUTPUT);
   digitalWrite(LED_Low,1);
   digitalWrite(LED_Mid,1);
   digitalWrite(LED_High,1);
-  
-  dtime = 0;
+  */
+  pinMode(ALARM_PIN,INPUT);
+  digitalWrite(ALARM_PIN,HIGH);
+  if (digitalRead(ALARM_PIN)==0) mod |= mod_sonar;
+  dtime = millis();
 }
 
 void loop(){
-
-  dtime++;
-  if (dtime>=DELAYTIME){
-    dtime = 0;
+  now = millis();
+  if (now - dtime >=50){
     unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
     unsigned int dis = uS / US_ROUNDTRIP_CM;
     if (dis > shut_Low)
-      sonar_status = 1;
+      sonar_status = 1;  //Green
     else if (dis > shut_High)
-      sonar_status = 2;
+      sonar_status = 2;  //Yellow
     else 
-      sonar_status = 3;
+      sonar_status = 3;  //Red
+     dtime=millis();
   }
 
   if (Serial.available() > 0){
@@ -75,7 +80,7 @@ void loop(){
     delay(waittime);
     p2 = Serial.read();
     delay(waittime);
-    
+   
     if (cmd == 0 || cmd == 1){  
         //0 Forward 1 Backward 
         servo = 180-p2;
@@ -94,6 +99,7 @@ void loop(){
         //change mod!
         mod = p1;
     }
+  
     
     timeout = millis();
   }
@@ -101,10 +107,14 @@ void loop(){
   now = millis();
   if (((mod & mod_tout) && now-timeout>1000)||
       ((mod & mod_sonar) &&  sonar_status>2)){
-      analogWrite(morPin,0);
-      digitalWrite(morGnd,0);
-      myservo.write(90);
+      alarm_stop();
   }
+  
+}
+void alarm_stop(){
+    analogWrite(morPin,0);
+    digitalWrite(morGnd,0);
+    myservo.write(90);
 }
 /**
  * Divides a given PWM pin frequency by a divisor.

@@ -14,7 +14,7 @@ res=0
 
 case "$1" in
   start)
-	/usr/local/bin/carserver.py &
+	python /usr/local/bin/carserver.py &
   	;;
   restart|reload|force-reload)
   	;;
