@@ -2,11 +2,15 @@
 
 import sys
 from socket import *
-serverHost = "192.168.1.115"        # servername is localhost
-serverPort = 2013                   # use arbitrary port > 1024
+serverHost = ''       # servername is localhost
+serverPort = 0# use arbitrary port > 1024
+
+u = raw_input("Sendto:IP port?\n")
+serverHost,serverPort= u.split(' ') 
 while True:
-	cmd=raw_input("cmd?\n")
+	strings = raw_input("sendwhat?\n")
 	s = socket(AF_INET, SOCK_STREAM)    # create a TCP socket
-	s.connect((serverHost, serverPort)) # connect to server on the port
-	s.send(cmd)               # send the data
-	s.close()	
+	s.connect((serverHost, int(serverPort))) # connect to server on the port
+	s.send(strings)               # send the data
+	s.close()
+	s = None

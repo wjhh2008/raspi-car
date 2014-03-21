@@ -1,7 +1,7 @@
 #include <Servo.h>
 #include <NewPing.h>
 #define DELAYTIME 10000 
-#define TRIGGER_PIN  4  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define TRIGGER_PIN  2  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 400 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 #define morPin 11
@@ -58,16 +58,25 @@ void setup(){
 
 void loop(){
   now = millis();
-  if (now - dtime >=50){
+  if (now - dtime >=500){
+    //Serial.print(now-dtime);
     unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
     unsigned int dis = uS / US_ROUNDTRIP_CM;
+    Serial.print((unsigned char)dis);
     if (dis > shut_Low)
       sonar_status = 1;  //Green
     else if (dis > shut_High)
       sonar_status = 2;  //Yellow
     else 
       sonar_status = 3;  //Red
-     dtime=millis();
+    dtime=millis();
+    
+    for (int i=0;i<8;i++){
+      dis=21.61/(map(analogRead(i), 0, 1023, 0, 5000)-0.1696)*1000;
+      Serial.print(" ");
+      Serial.print((unsigned char)dis);
+    }
+    Serial.println();
   }
 
   if (Serial.available() > 0){
@@ -147,7 +156,7 @@ void alarm_stop(){
  * Thanks to macegr of the Arduino forums for his documentation of the
  * PWM frequency divisors. His post can be viewed at:
  *   http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1235060559/0#4
- */
+ 
 void setPwmFrequency(int pin, int divisor) {
   byte mode;
   if(pin == 5 || pin == 6 || pin == 9 || pin == 10) {
@@ -178,3 +187,5 @@ void setPwmFrequency(int pin, int divisor) {
     TCCR2B = TCCR2B & 0b11111000 | mode;
   }
 }
+
+*/
