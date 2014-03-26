@@ -36,40 +36,27 @@ while True:
 	s.bind((host, port)) 
 	s.listen(5) 
 	
-	c, ad = s.accept() #addr is acknowlaged
-	pt = c.recv(1024)
-	addr = (ad[0],int(pt))
-	print addr
-	c.close()
-	s.close()
-	s = None
+	c, ad = s.accept() 
 	print '1 host connected'
 
-	#Try to send data to the host with addr
-#	ts = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		
+	#Try to send data to the host with addr	
 	wait_time = 10 
-#	print addr
 	while True:
 		event.wait()
 		event.clear()
-		ts = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		try:
-			ts.connect(addr)
+			c.sendall(sensor_info)
 		except socket.error as msg:
-			ts.close()
 			wait_time = wait_time - 1
 			if wait_time > 0:
 				continue
 			else:
 				print 'try to send failed!'
 				break
-		ts.sendall(sensor_info)
-		ts.close()
-		ts = None
-
+	c.close()
+	s.close()
+	s = None 
 			
-	ts = None
 
 
 
