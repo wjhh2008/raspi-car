@@ -4,7 +4,7 @@ import sys
 import socket
 
 
-serverHost = '127.0.0.1'
+serverHost = '192.168.1.115'
 serverPort = 2014
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    # create a TCP socket
 s.connect((serverHost, serverPort)) # connect to server on the port

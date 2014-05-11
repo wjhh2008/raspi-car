@@ -29,33 +29,18 @@ def update_info():
 
 threading.Thread(target=update_info).start()
 
+#First Connection to get the host address
+print 'Waiting client'
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((host, port)) 
+s.listen(5) 
+
 while True:
-	#First Connection to get the host address
-	print 'Waiting client'
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.bind((host, port)) 
-	s.listen(5) 
 	
 	c, ad = s.accept() 
-	print '1 host connected'
-
-	#Try to send data to the host with addr	
-	wait_time = 10 
-	while True:
-		event.wait()
-		event.clear()
-		try:
-			c.sendall(sensor_info)
-		except socket.error as msg:
-			wait_time = wait_time - 1
-			if wait_time > 0:
-				continue
-			else:
-				print 'try to send failed!'
-				break
+	c.sendall(sensor_info)	
 	c.close()
-	s.close()
-	s = None 
+s.close()
 			
 
 
