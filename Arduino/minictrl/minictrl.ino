@@ -61,12 +61,20 @@ void loop(){
   if (now - dtime >=50){
     unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
     unsigned int dis = uS / US_ROUNDTRIP_CM;
-    if (dis > shut_Low)
-      sonar_status = 1;  //Green
-    else if (dis > shut_High)
-      sonar_status = 2;  //Yellow
-    else 
-      sonar_status = 3;  //Red
+    String s='';
+    for (int i=0; i<5 ;i++){
+          s=s+analogRead(i);
+    }
+    Serial.print(uS / US_ROUNDTRIP_CM);
+    Serial.print(s);
+    if (mod & mod_sonar){
+          if (dis > shut_Low)
+            sonar_status = 1;  //Green
+          else if (dis > shut_High)
+            sonar_status = 2;  //Yellow
+          else 
+            sonar_status = 3;  //Red
+    }
      dtime=millis();
   }
 
