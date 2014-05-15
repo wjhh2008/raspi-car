@@ -2,13 +2,18 @@
 #encoding=utf-8
 
 import socket
+import ConfigParser
 import os
 
+cf = ConfigParser.ConfigParser()
+cf.read('config.ini')
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 host = ''
-port = 2013
+port = int(cf.get('port','comd_port'))
+cf = None
+
 s.bind((host, port)) 
 s.listen(10) 
 motor = 0

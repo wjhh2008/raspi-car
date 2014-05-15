@@ -2,9 +2,15 @@
 import os
 import serial
 import struct
-DEVFILE = '/dev/ArduinoServer'
-port = "/dev/ttyAMA0"
-serl = serial.Serial(port,115200)
+import ConfigParser
+
+cf = ConfigParser.ConfigParser()
+cf.read('config.ini')
+
+DEVFILE = cf.get('serial','pipe')
+port = cf.get('serial','serial_port')
+
+serl = serial.Serial(port,115200,serial.EIGHTBITS,serial.PARITY_NONE,serial.STOPBITS_ONE,0)
 try:
 	if os.path.exists(DEVFILE):
 		os.unlink(DEVFILE)
@@ -36,4 +42,5 @@ else:
 			if len(line) > 126:
 				print "Input too long"
 				break
+			print serl.readline() 
 	
